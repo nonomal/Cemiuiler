@@ -11,6 +11,12 @@ public class DebugMode extends BaseHook {
                     param.setResult(true);
                 }
             });
+            hookAllMethods("com.android.browser.f1", "getDebugMode", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    param.setResult(true);
+                }
+            });
         }
     }
 
