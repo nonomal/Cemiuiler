@@ -16,12 +16,12 @@ public class SpinnerEx extends Spinner {
 
     public CharSequence[] entries;
     public int[] entryValues;
-    private final ArrayList<Integer> disabledItems = new ArrayList<Integer>();
+    private final ArrayList<Integer> disabledItems = new ArrayList<>();
 
     public SpinnerEx(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, new int[] { android.R.attr.entries, 0 } );
+        final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.entries, 0});
         entries = xmlAttrs.getTextArray(0);
         if (xmlAttrs.getResourceId(1, 0) != 0) entryValues = getResources().getIntArray(xmlAttrs.getResourceId(1, 0));
         xmlAttrs.recycle();

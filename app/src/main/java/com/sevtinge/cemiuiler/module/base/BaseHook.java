@@ -1,10 +1,15 @@
 package com.sevtinge.cemiuiler.module.base;
 
-import com.sevtinge.cemiuiler.XposedInit;
-import com.sevtinge.cemiuiler.utils.ResourcesHook;
-import com.sevtinge.cemiuiler.utils.LogUtils;
-import com.sevtinge.cemiuiler.utils.PrefsMap;
+import static com.sevtinge.cemiuiler.utils.log.AndroidLogUtils.LogD;
 
+import com.sevtinge.cemiuiler.BuildConfig;
+import com.sevtinge.cemiuiler.XposedInit;
+import com.sevtinge.cemiuiler.utils.PrefsMap;
+import com.sevtinge.cemiuiler.utils.ResourcesHook;
+import com.sevtinge.cemiuiler.utils.log.XposedLogUtils;
+import com.sevtinge.cemiuiler.utils.log.XposedLogUtils.*;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -13,12 +18,14 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public abstract class BaseHook {
-
     public String TAG = getClass().getSimpleName();
+    private static final boolean isDebugVersion = BuildConfig.BUILD_TYPE.contains("debug");
+    private static final boolean isNotReleaseVersion = !BuildConfig.BUILD_TYPE.contains("release");
+    private final boolean detailLog = !mPrefsMap.getBoolean("settings_disable_detailed_log");
 
     public LoadPackageParam lpparam;
-    public ResourcesHook mResHook = XposedInit.mResHook;
-    public static PrefsMap<String, Object> mPrefsMap = XposedInit.mPrefsMap;
+    public static final ResourcesHook mResHook = XposedInit.mResHook;
+    public static final PrefsMap<String, Object> mPrefsMap = XposedInit.mPrefsMap;
 
     public static final String ACTION_PREFIX = "com.sevtinge.cemiuiler.module.action.";
 
@@ -28,29 +35,17 @@ public abstract class BaseHook {
         try {
             setLoadPackageParam(lpparam);
             init();
-            printHookStateLog("Hook Success!");
+            if (detailLog && isNotReleaseVersion) {
+                XposedLogUtils.logI(TAG, "Hook Success.");
+            }
         } catch (Throwable t) {
-            printHookStateLog("Hook Failed!");
-            printHookFailedLog(t);
+            XposedLogUtils.logE(TAG, "Hook Failed", t);
         }
     }
 
     public void setLoadPackageParam(LoadPackageParam param) {
         lpparam = param;
     }
-
-    private void printHookStateLog(String state) {
-        LogUtils.log(TAG + " " + state);
-    }
-
-    private void printHookFailedLog(Throwable th) {
-        LogUtils.log(TAG + " FailedInfo：" + th);
-    }
-
-    public void log(String log) {
-        XposedBridge.log("Cemiuiler: " + TAG + " " + log);
-    }
-
 
     public Class<?> findClass(String className) {
         return findClass(className, lpparam.classLoader);
@@ -64,7 +59,7 @@ public abstract class BaseHook {
         try {
             return findClass(className);
         } catch (XposedHelpers.ClassNotFoundError e) {
-            LogUtils.log("find " + className + " is Null", e);
+            LogD("findClassIfExists", "find " + className + " is Null", e);
             return null;
         }
     }
@@ -73,7 +68,7 @@ public abstract class BaseHook {
         try {
             return findClass(findClassIfExists(newClassName) != null ? newClassName : oldClassName);
         } catch (XposedHelpers.ClassNotFoundError e) {
-            LogUtils.log("find " + newClassName + " and " + oldClassName + " is Null", e);
+            LogD("findClassIfExists", "find " + newClassName + " and " + oldClassName + " is Null", e);
             return null;
         }
     }
@@ -82,7 +77,7 @@ public abstract class BaseHook {
         try {
             return findClass(className, classLoader);
         } catch (XposedHelpers.ClassNotFoundError e) {
-            LogUtils.log("find " + className + " is Null", e);
+            LogD("findClassIfExists", "find " + className + " is Null", e);
             return null;
         }
     }
@@ -109,7 +104,7 @@ public abstract class BaseHook {
             try {
                 this.before(param);
             } catch (Throwable t) {
-                LogUtils.log(t);
+                LogD("BeforeHook", t);
             }
         }
 
@@ -118,7 +113,7 @@ public abstract class BaseHook {
             try {
                 this.after(param);
             } catch (Throwable t) {
-                LogUtils.log(t);
+                LogD("AfterHook", t);
             }
         }
     }
@@ -137,7 +132,7 @@ public abstract class BaseHook {
             findAndHookMethod(className, methodName, parameterTypesAndCallback);
             return true;
         } catch (Throwable t) {
-            LogUtils.log(t);
+            LogD("findAndHookMethodSilently", className + methodName + " is null", t);
             return false;
         }
     }
@@ -147,7 +142,7 @@ public abstract class BaseHook {
             findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
             return true;
         } catch (Throwable t) {
-            LogUtils.log(t);
+            LogD("findAndHookMethodSilently", clazz + methodName + " is null", t);
             return false;
         }
     }
@@ -172,7 +167,7 @@ public abstract class BaseHook {
             }
 
         } catch (Throwable t) {
-            LogUtils.log(t);
+            LogD("HookAllMethods", className + " is " + methodName + " abnormal", t);
         }
     }
 
@@ -180,7 +175,7 @@ public abstract class BaseHook {
         try {
             XposedBridge.hookAllMethods(hookClass, methodName, callback).size();
         } catch (Throwable t) {
-            LogUtils.log(t);
+            LogD("HookAllMethods", hookClass + " is " + methodName + " abnormal", t);
         }
     }
 
@@ -212,7 +207,7 @@ public abstract class BaseHook {
                 XposedBridge.hookAllConstructors(hookClass, callback).size();
             }
         } catch (Throwable t) {
-            LogUtils.log(t);
+            LogD("hookAllConstructors", className + " is  abnormal", t);
         }
     }
 
@@ -220,7 +215,7 @@ public abstract class BaseHook {
         try {
             XposedBridge.hookAllConstructors(hookClass, callback).size();
         } catch (Throwable t) {
-            LogUtils.log(t);
+            LogD("hookAllConstructors", hookClass + " is  abnormal", t);
         }
     }
 
@@ -230,6 +225,34 @@ public abstract class BaseHook {
             return XposedHelpers.getStaticObjectField(clazz, fieldName);
         } catch (Throwable t) {
             return null;
+        }
+    }
+
+    public void setDeclaredField(XC_MethodHook.MethodHookParam param, String iNeedString, Object iNeedTo) {
+        if (param != null) {
+            try {
+                Field setString = param.thisObject.getClass().getDeclaredField(iNeedString);
+                setString.setAccessible(true);
+                try {
+                    setString.set(param.thisObject, iNeedTo);
+                    Object result = setString.get(param.thisObject);
+                    checkLast("getDeclaredField", iNeedString, iNeedTo, result);
+                } catch (IllegalAccessException e) {
+                    XposedLogUtils.logW("IllegalAccessException to: " + iNeedString + " need to: " + iNeedTo + " code:" + e);
+                }
+            } catch (NoSuchFieldException e) {
+                XposedLogUtils.logW("No such the: " + iNeedString + " code: " + e);
+            }
+        } else {
+            XposedLogUtils.logW("Param is null Field: " + iNeedString + " to: " + iNeedTo);
+        }
+    }
+
+    public void checkLast(String setObject, Object fieldName, Object value, Object last) {
+        if (value.equals(last)) {
+            XposedLogUtils.logI(setObject + " Success! set " + fieldName + " to " + value);
+        } else {
+            XposedLogUtils.logW(setObject + " Failed! set " + fieldName + " to " + value + " hope: " + value + " but: " + last);
         }
     }
 }

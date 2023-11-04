@@ -8,7 +8,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public abstract class BaseModule implements IXposedHook {
 
     public LoadPackageParam mLoadPackageParam = null;
-    public PrefsMap<String, Object> mPrefsMap = XposedInit.mPrefsMap;
+    public final PrefsMap<String, Object> mPrefsMap = XposedInit.mPrefsMap;
 
     public void init(LoadPackageParam lpparam) {
         mLoadPackageParam = lpparam;
@@ -17,7 +17,8 @@ public abstract class BaseModule implements IXposedHook {
     }
 
     @Override
-    public void initZygote() {}
+    public void initZygote() {
+    }
 
     public void initHook(BaseHook baseHook) {
         initHook(baseHook, true);

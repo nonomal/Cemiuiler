@@ -27,7 +27,7 @@
             android:id="@android:id/edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/preference_item_padding_horizontal"
+            android:layout_marginHorizontal="@dimen/miuix_appcompat_edit_text_padding_horizontal"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:inputType="textMultiLine"

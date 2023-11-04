@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 
 import com.sevtinge.cemiuiler.utils.Helpers;
 import com.sevtinge.cemiuiler.utils.PrefsUtils;
@@ -50,30 +51,29 @@ public class SharedPrefsProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         List<String> parts = uri.getPathSegments();
-        //Log.e("parts", String.valueOf(parts));
+        // Log.e("parts", String.valueOf(parts));
         MatrixCursor cursor = new MatrixCursor(new String[]{"data"});
 
         switch (uriMatcher.match(uri)) {
-            case 0: {
+            case 0 -> {
                 cursor.newRow().add("data", prefs.getString(parts.get(1), ""));
                 return cursor;
             }
-            case 1: {
+            case 1 -> {
                 cursor.newRow().add("data", prefs.getString(parts.get(1), parts.get(2)));
                 return cursor;
             }
-            case 2: {
+            case 2 -> {
                 cursor.newRow().add("data", prefs.getInt(parts.get(1), Integer.parseInt(parts.get(2))));
                 return cursor;
             }
-            case 3: {
+            case 3 -> {
                 cursor.newRow().add("data", prefs.getBoolean(parts.get(1), Integer.parseInt(parts.get(2)) == 1) ? 1 : 0);
                 return cursor;
             }
-            case 4: {
-                Set<String> strings = prefs.getStringSet(parts.get(1), new LinkedHashSet<String>());
-                if (strings != null)
-                    for (String str: strings) cursor.newRow().add("data", str);
+            case 4 -> {
+                Set<String> strings = prefs.getStringSet(parts.get(1), new LinkedHashSet<>());
+                for (String str : strings) cursor.newRow().add("data", str);
                 return cursor;
             }
         }
@@ -97,7 +97,7 @@ public class SharedPrefsProvider extends ContentProvider {
             if (filename != null) try {
                 afd = getContext().getAssets().openFd(filename);
             } catch (Throwable t) {
-                t.printStackTrace();
+                Log.i("afd", String.valueOf(t));
             }
             return afd;
         } else if (uriMatcher.match(uri) == 6) {

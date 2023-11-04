@@ -2,15 +2,16 @@ package com.sevtinge.cemiuiler.utils
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.view.View
+import androidx.annotation.RequiresApi
+import com.sevtinge.cemiuiler.utils.log.XposedLogUtils
+import com.sevtinge.cemiuiler.utils.log.XposedLogUtils.logE
+import com.sevtinge.cemiuiler.utils.log.XposedLogUtils.logW
 import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 
 object HookUtils {
-    fun log(content: Any?) {
-        XposedBridge.log("Cemiuiler: $content")
-    }
 
     fun dip2px(context: Context, dpValue: Float): Float {
         val scale = context.resources.displayMetrics.density
@@ -23,7 +24,7 @@ object HookUtils {
             classLoader
         )
         if (result == null) {
-            log("'$className' is NOT found.")
+            logE("getClass", "'$className' is NOT found.")
         }
         return result
     }
@@ -44,7 +45,7 @@ object HookUtils {
                 XC_MethodReplacement.returnConstant(result)
             )
         } catch (e: Throwable) {
-            log(e.message)
+            logW("replaceMethodResult", e)
         }
     }
 
@@ -66,6 +67,7 @@ object HookUtils {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     fun createBlurDrawable(
         view: View,
         blurRadius: Int,
@@ -73,26 +75,18 @@ object HookUtils {
         color: Int? = null
     ): Drawable? {
         try {
-            val mViewRootImpl = XposedHelpers.callMethod(
-                view,
-                "getViewRootImpl"
-            ) ?: return null
-            val blurDrawable = XposedHelpers.callMethod(
-                mViewRootImpl,
-                "createBackgroundBlurDrawable"
-            ) as Drawable
+            val mViewRootImpl =
+                XposedHelpers.callMethod(view, "getViewRootImpl") ?: return null
+            val blurDrawable =
+                XposedHelpers.callMethod(mViewRootImpl, "createBackgroundBlurDrawable") as Drawable
             XposedHelpers.callMethod(blurDrawable, "setBlurRadius", blurRadius)
             XposedHelpers.callMethod(blurDrawable, "setCornerRadius", cornerRadius)
             if (color != null) {
-                XposedHelpers.callMethod(
-                    blurDrawable,
-                    "setColor",
-                    color
-                )
+                XposedHelpers.callMethod(blurDrawable, "setColor",color)
             }
             return blurDrawable
         } catch (e: Throwable) {
-            log("Create BlurDrawable Error:$e")
+            logW("createBlurDrawable", "Create BlurDrawable Error", e)
             return null
         }
     }

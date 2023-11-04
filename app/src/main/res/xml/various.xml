@@ -1,65 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory>
-
-        <Preference android:title="@string/various_location_simulation_title"
-                    android:enabled="false">
-            <intent
-                    android:targetPackage="com.sevtinge.cemiuiler"
-                    android:targetClass="com.sevtinge.cemiuiler.ui.various.LocationSimulationActivity"/>
-        </Preference>
+        <Preference
+            android:enabled="false"
+            android:title="@string/various_location_simulation_title"
+            app:isPreferenceVisible="false" />
 
         <Preference
-                android:title="@string/various_dialog_title"
-                android:key="prefs_key_various_dialog"
-                app:isPreferenceVisible="true">
+            android:fragment="com.sevtinge.cemiuiler.ui.fragment.various.AlertDialogSettings"
+            android:key="prefs_key_various_dialog"
+            android:title="@string/various_dialog_title"
+            app:isPreferenceVisible="true" />
 
-            <intent
-                    android:targetPackage="com.sevtinge.cemiuiler"
-                    android:targetClass="com.sevtinge.cemiuiler.ui.various.VariousDialogActivity"/>
-        </Preference>
+        <Preference
+            android:fragment="com.sevtinge.cemiuiler.ui.fragment.various.AOSPSettings"
+            android:key="prefs_key_various_open_aosp_something"
+            android:summary="@string/various_open_aosp_something_desc"
+            android:title="@string/various_open_aosp_something_title" />
+
+        <Preference
+            android:fragment="com.sevtinge.cemiuiler.ui.fragment.various.MiPadSettings"
+            android:key="prefs_key_various_mipad"
+            android:title="@string/various_mipad_title"
+            app:isPreferenceVisible="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory>
+    <PreferenceCategory android:title="@string/various_super_clipboard_title">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_various_super_clipboard_enable"
+            android:summary="@string/various_super_clipboard_summary"
+            android:title="@string/various_unlock_super_clipboard" />
 
         <SwitchPreference
-                android:title="@string/settings_notfication_importance"
-                android:key="prefs_key_settings_notfication_importance"
-                android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:dependency="prefs_key_various_super_clipboard_enable"
+            android:key="prefs_key_various_super_clipboard_gallery"
+            android:summary="@string/various_super_clipboard_picture_desc"
+            android:title="@string/gallery" />
 
         <SwitchPreference
-                android:title="@string/various_no_overscroll"
-                android:key="prefs_key_various_no_overscroll"
-                android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:dependency="prefs_key_various_super_clipboard_enable"
+            android:key="prefs_key_various_super_clipboard_notes"
+            android:title="@string/notes" />
 
         <SwitchPreference
-                android:title="@string/various_unlock_ime"
-                android:key="prefs_key_various_unlock_ime"
-                android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:dependency="prefs_key_various_super_clipboard_enable"
+            android:key="prefs_key_various_super_clipboard_creation"
+            android:title="@string/creation" />
 
         <SwitchPreference
-                android:title="@string/various_disable_bluetooth_restrict"
-                android:key="prefs_key_various_disable_bluetooth_restrict"
-                android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:dependency="prefs_key_various_super_clipboard_enable"
+            android:key="prefs_key_various_super_clipboard_screenshot"
+            android:summary="@string/various_super_clipboard_picture_desc"
+            android:title="@string/screenshot" />
 
         <SwitchPreference
-                android:title="@string/various_disable_folder_cantuse"
-                android:key="prefs_key_various_disable_folder_cantuse"
-                android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:dependency="prefs_key_various_super_clipboard_enable"
+            android:key="prefs_key_various_super_clipboard_mms"
+            android:title="@string/mms" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="prefs_key_various_super_clipboard_enable"
+            android:key="prefs_key_various_super_clipboard_browser"
+            android:summary="@string/various_super_clipboard_files_desc"
+            android:title="@string/browser" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="prefs_key_various_super_clipboard_enable"
+            android:key="prefs_key_various_super_clipboard_fileexplorer"
+            android:summary="@string/various_super_clipboard_files_desc"
+            android:title="@string/fileexplorer" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/various">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_settings_notfication_importance"
+            android:title="@string/settings_notfication_importance" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_various_no_overscroll"
+            android:title="@string/various_no_overscroll" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_various_disable_bluetooth_restrict"
+            android:title="@string/various_disable_bluetooth_restrict" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_various_disable_access_device_logs"
+            android:title="@string/various_disable_access_device_logs" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_various_unlock_ime"
+            android:summary="@string/various_unlock_ime_desc"
+            android:title="@string/various_unlock_ime" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_various_disable_folder_cantuse"
+            android:title="@string/various_disable_folder_cantuse" />
 
         <DropDownPreference
-                android:key="prefs_key_various_collapse_miui_title"
-                android:title="@string/various_collapse_miui_title"
-                android:summary="@string/various_collapse_miui_title_desc"
-                android:defaultValue="0"
-                app:entries="@array/collapse_miui_title"
-                app:entryValues="@array/collapse_miui_title_value"/>
+            android:defaultValue="0"
+            android:key="prefs_key_various_collapse_miui_title"
+            android:summary="@string/various_collapse_miui_title_desc"
+            android:title="@string/various_collapse_miui_title"
+            app:entries="@array/collapse_miui_title"
+            app:entryValues="@array/collapse_miui_title_value" />
 
     </PreferenceCategory>
-
-<Preference android:enabled="false" />
-
+    <Preference android:enabled="false" />
 </PreferenceScreen>

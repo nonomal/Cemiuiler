@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:title="@string/mi_settings_show_fps"
+        android:summary="@string/mi_settings_show_fps_desc"
+        android:key="prefs_key_mi_settings_show_fps"
+        android:defaultValue="false" />
+
+    <Preference android:enabled="false" />
+
+</PreferenceScreen>

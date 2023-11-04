@@ -10,7 +10,9 @@
         <item>com.android.fileexplorer</item>
         <item>com.android.incallui</item>
         <item>com.android.mms</item>
+        <item>com.android.nfc</item>
         <item>com.android.phone</item>
+        <item>com.android.providers.downloads</item>
         <item>com.android.providers.downloads.ui</item>
         <item>com.android.systemui</item>
         <item>com.android.settings</item>
@@ -20,9 +22,11 @@
         <item>com.iflytek.inputmethod.miui</item>
         <item>com.lbe.security.miui</item>
         <item>com.milink.service</item>
+        <item>com.miui.aod</item>
         <item>com.miui.cleanmaster</item>
         <item>com.miui.cloudservice</item>
         <item>com.miui.contentextension</item>
+        <item>com.miui.creation</item>
         <item>com.miui.gallery</item>
         <item>com.miui.guardprovider</item>
         <item>com.miui.home</item>
@@ -43,14 +47,15 @@
         <item>com.miui.voiceassist</item>
         <item>com.miui.weather2</item>
         <item>com.sohu.inputmethod.sogou.xiaomi</item>
-        <item>com.xiaomi.aireco</item>
+        <item>com.xiaomi.aiasst.vision</item>
+        <item>com.xiaomi.barrage</item>
         <item>com.xiaomi.joyose</item>
         <item>com.xiaomi.market</item>
         <item>com.xiaomi.mirror</item>
         <item>com.xiaomi.misettings</item>
         <item>com.xiaomi.mtb</item>
+        <item>com.xiaomi.NetworkBoost</item>
         <item>com.xiaomi.scanner</item>
-        <item>miui.systemui.plugin</item>
     </string-array>
 
     <string-array name="app_module_support">
@@ -62,21 +67,25 @@
     </string-array>
 
     <string-array name="restart_apps_name">
-        <item>@string/joyose</item>
-        <item>@string/powerkeeper</item>
-        <item>@string/system_settings</item>
-        <item>@string/security_center</item>
         <item>@string/system_ui</item>
         <item>@string/home</item>
+        <item>@string/security_center</item>
+        <item>@string/personal_assistant</item>
+        <item>@string/notes</item>
+        <item>@string/powerkeeper</item>
+        <item>@string/joyose</item>
+        <item>@string/networkboost</item>
     </string-array>
 
     <string-array name="restart_apps_packagename">
-        <item>com.xiaomi.joyose</item>
-        <item>com.miui.powerkeeper</item>
-        <item>com.android.settings</item>
-        <item>com.miui.securitycenter</item>
         <item>com.android.systemui</item>
         <item>com.miui.home</item>
+        <item>com.miui.securitycenter</item>
+        <item>com.miui.personalassistant</item>
+        <item>com.miui.notes</item>
+        <item>com.miui.powerkeeper</item>
+        <item>com.xiaomi.joyose</item>
+        <item>com.xiaomi.NetworkBoost</item>
     </string-array>
 
     <string-array name="miui_core_app_package_name">
@@ -168,7 +177,6 @@
         <item>@string/charge_animation_entries_aura</item>
         <item>@string/charge_animation_entries_stream</item>
         <item>@string/charge_animation_entries_alpha</item>
-        <item>@string/charge_animation_entries_lzdh</item>
     </string-array>
 
     <string-array name="charge_animation_values">
@@ -177,7 +185,6 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
-        <item>5</item>
     </string-array>
 
 
@@ -185,6 +192,12 @@
         <item>@string/status_bar_icon_mode_default</item>
         <item>@string/status_bar_icon_mode_on</item>
         <item>@string/status_bar_icon_mode_off</item>
+    </string-array>
+
+    <string-array name="control_center_sunshine_mode">
+        <item>@string/control_center_sunshine_mode_default</item>
+        <item>@string/control_center_sunshine_mode_one</item>
+        <item>@string/control_center_sunshine_mode_two</item>
     </string-array>
 
     <string-array name="status_bar_icon_mode_value">
@@ -439,6 +452,18 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="system_ui_status_bar_clock_double_mode">
+        <item>@string/array_default</item>
+        <item>@string/array_align_center</item>
+        <item>@string/array_align_right</item>
+    </string-array>
+
+    <string-array name="system_ui_status_bar_clock_double_mode_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="system_ui_status_bar_battery_show">
         <item>@string/array_battery_both</item>
         <item>@string/array_battery_power</item>
@@ -465,6 +490,20 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="system_ui_status_bar_layout_mode">
+        <item>@string/array_default</item>
+        <item>@string/array_clock_center</item>
+        <item>@string/array_clock_right</item>
+        <item>@string/array_clock_center_and_icon_left</item>
+    </string-array>
+
+    <string-array name="system_ui_status_bar_layout_mode_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <string-array name="system_ui_status_bar_device_temp_details">
         <item>@string/array_battery_both</item>
         <item>@string/array_battery_temp</item>
@@ -473,28 +512,34 @@
 
     <string-array name="market_device_modify_list">
         <item>@string/array_default</item>
+        <item>Xiaomi 14 Pro</item>
+        <item>Xiaomi 14</item>
         <item>Xiaomi 13 Ultra</item>
         <item>Xiaomi CIVI 3</item>
-        <item>Xiaomi MIX Fold 2</item>
         <item>Xiaomi MIX Fold 3</item>
         <item>Xiaomi MIX Alpha (Avenger)</item>
         <item>Xiaomi MIX Alpha (Draco)</item>
-        <item>Xiaomi Pad 6 Pro</item>
-        <item>Redmi K60 Pro</item>
-        <item>Redmi Note 12 Turbo</item>
+        <item>Xiaomi Pad 6 Max 14</item>
+        <item>Redmi K60 Ultra</item>
+        <item>Redmi K70 Pro</item>
+        <item>Redmi K70E</item>
+        <item>Redmi Note 13 Pro+</item>
     </string-array>
 
     <string-array name="market_device_modify_value">
         <item>0</item>
+        <item>102</item>
+        <item>103</item>
         <item>101</item>
         <item>153</item>
-        <item>222</item>
         <item>223</item>
         <item>190</item>
         <item>191</item>
-        <item>207</item>
-        <item>306</item>
-        <item>332</item>
+        <item>208</item>
+        <item>307</item>
+        <item>309</item>
+        <item>351</item>
+        <item>334</item>
     </string-array>
 
     <string-array name="link_open_mode">
@@ -507,4 +552,57 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="system_ui_status_bar_network_icon_style">
+        <item>@string/array_default</item>
+        <item>@string/array_bold</item>
+        <item>@string/array_theme</item>
+    </string-array>
+
+    <string-array name="system_ui_status_bar_network_icon_style_value">
+        <item />
+        <item>thick</item>
+        <item>theme</item>
+    </string-array>
+
+    <string-array name="control_center_cc_bluetooth_tile_style">
+        <item>@string/array_default</item>
+        <item>@string/array_bluetooth_tile_style_2rows2cols</item>
+        <item>@string/array_bluetooth_tile_style_3rows</item>
+    </string-array>
+
+    <string-array name="control_center_cc_bluetooth_tile_style_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="mipad_input_bluetooth_version">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="mipad_input_bluetooth_version_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="personal_assistant_blur">
+        <item>@string/array_pa_blur_official</item>
+        <item>@string/array_bpa_blur_customize</item>
+    </string-array>
+
+    <string-array name="personal_assistant_blur_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="updater_version_mode">
+        <item>MIUI</item>
+        <item>Xiaomi HyperOS</item>
+    </string-array>
+
+    <string-array name="updater_version_mode_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

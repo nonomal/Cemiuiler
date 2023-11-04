@@ -11,52 +11,33 @@ static def getGitRevision() {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
-        applicationId "com.sevtinge.cemiuiler"
+        namespace 'com.sevtinge.cemiuiler'
+        applicationId namespace
         minSdk 30
-        targetSdk 33
-        versionCode 103
-        versionName "1.0.103"
+        targetSdk 34
+        versionCode 130
+        versionName "1.3.130"
         project.archivesBaseName = "Cemiuiler"
+        ndk {
+            // noinspection ChromeOsAbiSupport
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+        }
         applicationVariants.configureEach { variant ->
-            variant.outputs.all {
+            variant.outputs.configureEach {
                 outputFileName = project.archivesBaseName + "_" + versionName + "(" + versionCode + ")_" + variant.buildType.name + ".apk"
             }
         }
     }
-    
 
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now())
-        }
-        beta {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now())
-        }
-        canary {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now()) + "_" + getGitRevision()
-        }
-        debug {
-            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now()) + "_" + getGitRevision()
-        }
+    buildFeatures {
+        buildConfig = true
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_14
-        targetCompatibility JavaVersion.VERSION_14
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_14.toString()
+    androidResources {
+        generateLocaleConfig = true
     }
 
     packagingOptions {
@@ -65,17 +46,84 @@ android {
             excludes += "/kotlin/**"
             excludes += "/*.txt"
             excludes += "/*.bin"
+            excludes += "/*.json"
+        }
+        dex {
+            useLegacyPackaging = true
         }
     }
-    namespace 'com.sevtinge.cemiuiler'
+
+    def properties
+    def propertiesFile = rootProject.file('signing.properties')
+    if (propertiesFile.exists()) {
+        properties = new Properties()
+        properties.load(propertiesFile.newDataInputStream())
+    }
+    def getString = { String propertyName, String environmentName, String prompt ->
+        return properties?.get(propertyName) ?: System.getenv(environmentName) ?:
+            System.console()?.readLine('\n' + prompt + ': ')
+    }
+    def keyStoreFile = getString('storeFile', 'STORE_FILE', 'Store file')?.with(rootProject.&file)
+
+    signingConfigs {
+        cemiuiler {
+            if (keyStoreFile != null) {
+                storeFile keyStoreFile
+                storePassword getString('storePassword', 'STORE_PASSWORD', 'Store password')
+                keyAlias getString('keyAlias', 'KEY_ALIAS', 'Key alias')
+                keyPassword getString('keyPassword', 'KEY_PASSWORD', 'Key password')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-log.pro'
+            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now())
+            if (keyStoreFile != null) {
+                signingConfig signingConfigs.cemiuiler
+            }
+        }
+        beta {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now())
+            if (keyStoreFile != null) {
+                signingConfig signingConfigs.cemiuiler
+            }
+        }
+        canary {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now()) + "_" + getGitRevision()
+            if (keyStoreFile != null) {
+                signingConfig signingConfigs.cemiuiler
+            }
+        }
+        debug {
+            versionNameSuffix "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now()) + "_" + getGitRevision()
+            if (keyStoreFile != null) {
+                signingConfig signingConfigs.cemiuiler
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_19
+        targetCompatibility JavaVersion.VERSION_19
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_19.toString()
+    }
+
 }
-/*
-repositories {
-    mavenCentral()
-}*/
 
 dependencies {
-
     compileOnly(project(":hidden-api"))
 
     compileOnly files('libs/miui.jar')
@@ -83,11 +131,14 @@ dependencies {
 
     compileOnly(roots.XposedApi)
 
-    implementation 'org.luckypray:DexKit:1.1.4'
-    implementation 'com.github.kyuubiran:EzXHelper:1.0.3'
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
+    implementation 'org.luckypray:dexkit:2.0.0-rc7'
+    // implementation 'org.luckypray:DexKit:1.1.8'
+    implementation 'io.github.biezhi:TinyPinyin:2.0.3.RELEASE'
+    implementation 'com.github.kyuubiran:EzXHelper:2.0.8'
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
     implementation "org.lsposed.hiddenapibypass:hiddenapibypass:4.3"
     implementation "com.google.code.gson:gson:2.10.1"
+    implementation 'commons-codec:commons-codec:1.16.0'
 
     implementation roots.AndroidXCore
     implementation roots.AndroidXCollection
@@ -101,17 +152,12 @@ dependencies {
     implementation roots.AndroidXConstraintLayout
 
     implementation files(roots.animation)
-    implementation files(roots.annotation)
     implementation files(roots.appcompat)
-    implementation files(roots.appcompat_resources)
-    implementation files(roots.blur)
     implementation files(roots.core)
     implementation files(roots.haptic)
-    implementation files(roots.internal)
-    implementation files(roots.os)
     implementation files(roots.preference)
-    implementation files(roots.recyclerview)
     implementation files(roots.smooth)
     implementation files(roots.springback)
-    implementation files(roots.stub)
+
+    implementation files("libs/hyperceiler_expansion_packs-debug.aar")
 }

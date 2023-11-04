@@ -1,5 +1,7 @@
 package com.sevtinge.cemiuiler.utils;
 
+import static com.sevtinge.cemiuiler.utils.log.AndroidLogUtils.LogD;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Pair;
@@ -20,13 +22,12 @@ public class ResourcesHook {
     }
 
     private final SparseIntArray fakes = new SparseIntArray();
-    private final ConcurrentHashMap<String, Pair<ReplacementType, Object>> replacements = new ConcurrentHashMap<String, Pair<ReplacementType, Object>>();
+    private final ConcurrentHashMap<String, Pair<ReplacementType, Object>> replacements = new ConcurrentHashMap<>();
 
     public static int getFakeResId(String resourceName) {
         return 0x7e00f000 | (resourceName.hashCode() & 0x00ffffff);
     }
 
-    @SuppressWarnings("FieldCanBeLocal")
     private final Helpers.MethodHook mReplaceHook = new Helpers.MethodHook() {
         @Override
         protected void before(MethodHookParam param) {
@@ -95,7 +96,7 @@ public class ResourcesHook {
                 value = XposedHelpers.callMethod(modRes, method, modResId);
             return value;
         } catch (Throwable t) {
-            Helpers.log(t);
+            LogD("getFakeResource", t);
             return null;
         }
     }
@@ -169,7 +170,7 @@ public class ResourcesHook {
                 value = XposedHelpers.callMethod(modRes, method, modResId);
             return value;
         } catch (Throwable t) {
-            Helpers.log(t);
+            LogD("getResourceReplacement", t);
             return null;
         }
     }

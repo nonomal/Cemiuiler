@@ -3,64 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory>
-
         <SwitchPreference
-            android:title="@string/settings_hide_app_icon"
+            android:defaultValue="true"
             android:key="prefs_key_settings_hide_app_icon"
-            android:defaultValue="true"/>
+            android:title="@string/settings_hide_app_icon" />
 
         <DropDownPreference
-            android:title="@string/settings_icon"
-            android:summary="@string/settings_icon_desc"
+            android:defaultValue="0"
             android:key="prefs_key_settings_icon"
+            android:summary="@string/settings_icon_desc"
+            android:title="@string/settings_icon"
             app:entries="@array/settings_icon"
-            app:entryValues="@array/settings_icon_value"
-            android:defaultValue="0" />
+            app:entryValues="@array/settings_icon_value" />
 
         <DropDownPreference
-            android:title="@string/settings_icon_mode"
-            android:key="prefs_key_settings_icon_mode"
+            android:defaultValue="0"
             android:dependency="prefs_key_settings_icon"
+            android:enabled="false"
+            android:key="prefs_key_settings_icon_mode"
+            android:title="@string/settings_icon_mode"
             app:entries="@array/settings_icon_mode"
             app:entryValues="@array/settings_icon_mode_value"
-            app:isPreferenceVisible="false"
-            android:enabled="false"
-            android:defaultValue="0" />
+            app:isPreferenceVisible="false" />
 
         <MultiSelectListPreference
-            android:title="@string/settings_reboot"
-            android:key="prefs_key_settings_reboot" />
+            android:enabled="false"
+            android:key="prefs_key_settings_reboot"
+            android:title="@string/settings_reboot" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_settings_disable_detailed_log"
+            android:summary="@string/disable_detailed_log_desc"
+            android:title="@string/disable_detailed_log" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_data_title">
-
         <Preference
             android:key="prefs_key_back"
-            android:title="@string/settings_back"/>
+            android:title="@string/settings_back" />
 
         <Preference
             android:key="prefs_key_rest"
-            android:title="@string/settings_rest"/>
+            android:title="@string/settings_rest" />
 
         <Preference
             android:key="prefs_key_reset"
-            android:title="@string/settings_reset"/>
+            android:title="@string/settings_reset" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_bug_title">
-
         <Preference
-            android:title="@string/settings_safe_mode"
+            android:fragment="com.sevtinge.cemiuiler.ui.fragment.settings.SafeModeFragment"
             android:key="prefs_key_safe_mode"
-            android:summary="@string/settings_safe_mode_desc">
-
-            <intent
-                android:targetPackage="com.sevtinge.cemiuiler"
-                android:targetClass="com.sevtinge.cemiuiler.ui.settings.SafeModeActivity" />
-
-        </Preference>
+            android:summary="@string/settings_safe_mode_desc"
+            android:title="@string/settings_safe_mode" />
 
     </PreferenceCategory>
 
@@ -71,6 +70,6 @@
                 android:targetClass="com.sevtinge.cemiuiler.ui.common.DebugActivity"/>
         </Preference>
     </PreferenceCategory>-->
-<Preference android:enabled="false" />
+    <Preference android:enabled="false" />
 
 </PreferenceScreen>

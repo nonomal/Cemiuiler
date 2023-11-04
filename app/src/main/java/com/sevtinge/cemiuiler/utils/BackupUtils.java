@@ -1,5 +1,7 @@
 package com.sevtinge.cemiuiler.utils;
 
+import com.sevtinge.hyperceiler.expansionpacks.utils.KS2Utils;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -81,7 +83,6 @@ public class BackupUtils {
                 edit.putInt(key, (Integer) value);
             }
         }
-        bufferedReader.close();
         edit.apply();
     }
 }

@@ -1,5 +1,7 @@
 package com.sevtinge.cemiuiler.utils;
 
+import com.sevtinge.cemiuiler.utils.log.AndroidLogUtils;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,55 +9,54 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 public class ShellUtils {
-
-    public static final String COMMAND_SU       = "su";
-    public static final String COMMAND_SH       = "sh";
-    public static final String COMMAND_EXIT     = "exit\n";
-    public static final String COMMAND_LINE_END = "\n";
-
-    private ShellUtils() {
-        throw new AssertionError();
-    }
-
     /**
      * check whether has root permission
      *
-     * @return
+     * @return if int = 0, then have root, else don't have.
      */
-    public static boolean checkRootPermission() {
-        return execCommand("echo root", true, false).result == 0;
+    public static int checkRootPermission() {
+        Process process = null;
+        int exitCode = -1;
+        try {
+            process = Runtime.getRuntime().exec("su -c true");
+            return process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            AndroidLogUtils.LogE("checkRootPermission", "check whether has root permission error: ", e);
+            return exitCode;
+        } finally {
+            if (process != null) {
+                process.destroy();
+            }
+        }
     }
 
     /**
      * execute shell command, default return result msg
      *
      * @param command command
-     * @param isRoot whether need to run with root
-     * @return
+     * @param isRoot  whether need to run with root
      * @see ShellUtils#execCommand(String[], boolean, boolean)
      */
     public static CommandResult execCommand(String command, boolean isRoot) {
-        return execCommand(new String[] {command}, isRoot, true);
+        return execCommand(new String[]{command}, isRoot, true);
     }
 
     /**
      * execute shell commands, default return result msg
      *
      * @param commands command activity_wifi
-     * @param isRoot whether need to run with root
-     * @return
+     * @param isRoot   whether need to run with root
      * @see ShellUtils#execCommand(String[], boolean, boolean)
      */
     public static CommandResult execCommand(List<String> commands, boolean isRoot) {
-        return execCommand(commands == null ? null : commands.toArray(new String[] {}), isRoot, true);
+        return execCommand(commands == null ? null : commands.toArray(new String[]{}), isRoot, true);
     }
 
     /**
      * execute shell commands, default return result msg
      *
      * @param commands command array
-     * @param isRoot whether need to run with root
-     * @return
+     * @param isRoot   whether need to run with root
      * @see ShellUtils#execCommand(String[], boolean, boolean)
      */
     public static CommandResult execCommand(String[] commands, boolean isRoot) {
@@ -65,40 +66,63 @@ public class ShellUtils {
     /**
      * execute shell command
      *
-     * @param command command
-     * @param isRoot whether need to run with root
+     * @param command         command
+     * @param isRoot          whether need to run with root
      * @param isNeedResultMsg whether need result msg
-     * @return
+     * @noinspection UnusedReturnValue
      * @see ShellUtils#execCommand(String[], boolean, boolean)
      */
     public static CommandResult execCommand(String command, boolean isRoot, boolean isNeedResultMsg) {
-        return execCommand(new String[] {command}, isRoot, isNeedResultMsg);
+        return execCommand(new String[]{command}, isRoot, isNeedResultMsg);
+    }
+
+    /**
+     * execute shell commands
+     *
+     * @param commands        command activity_wifi
+     * @param isRoot          whether need to run with root
+     * @param isNeedResultMsg whether need result msg
+     * @see ShellUtils#execCommand(String[], boolean, boolean)
+     */
+    public static CommandResult execCommand(List<String> commands, boolean isRoot, boolean isNeedResultMsg) {
+        return execCommand(commands == null ? null : commands.toArray(new String[]{}), isRoot, isNeedResultMsg);
+    }
+
+    /**
+     * execute shell commands
+     *
+     * @param command command activity_wifi
+     * @param isRoot  whether need to run with root
+     * @return if execCommand.result is 0, then return true, else return false
+     * @see ShellUtils#execCommand(String[], boolean, boolean)
+     */
+    public static boolean getResultBoolean(String command, boolean isRoot) {
+        return execCommand(new String[]{command}, isRoot, false).result == 0;
     }
 
     /**
      * execute shell commands
      *
      * @param commands command activity_wifi
-     * @param isRoot whether need to run with root
-     * @param isNeedResultMsg whether need result msg
-     * @return
+     * @param isRoot   whether need to run with root
+     * @return if execCommand.result is 0, then return true, else return false
      * @see ShellUtils#execCommand(String[], boolean, boolean)
      */
-    public static CommandResult execCommand(List<String> commands, boolean isRoot, boolean isNeedResultMsg) {
-        return execCommand(commands == null ? null : commands.toArray(new String[] {}), isRoot, isNeedResultMsg);
+    public static boolean getResultBoolean(List<String> commands, boolean isRoot) {
+        return execCommand(commands == null ? null : commands.toArray(new String[]{}), isRoot, false).result == 0;
     }
 
     /**
      * execute shell commands
      *
-     * @param commands command array
-     * @param isRoot whether need to run with root
+     * @param commands        command array
+     * @param isRoot          whether need to run with root
      * @param isNeedResultMsg whether need result msg
      * @return <ul>
-     *         <li>if isNeedResultMsg is false, {@link CommandResult#successMsg} is null and
-     *         {@link CommandResult#errorMsg} is null.</li>
-     *         <li>if {@link CommandResult#result} is -1, there maybe some excepiton.</li>
-     *         </ul>
+     * <li>if isNeedResultMsg is false, {@link CommandResult#successMsg} is null and
+     * {@link CommandResult#errorMsg} is null.</li>
+     * <li>if {@link CommandResult#result} is -1, there maybe some excepiton.</li>
+     * </ul>
      */
     public static CommandResult execCommand(String[] commands, boolean isRoot, boolean isNeedResultMsg) {
         int result = -1;
@@ -114,7 +138,13 @@ public class ShellUtils {
 
         DataOutputStream os = null;
         try {
-            process = Runtime.getRuntime().exec(isRoot ? COMMAND_SU : COMMAND_SH);
+            // if (isRoot) {
+            //     int exitCode = checkRootPermission();
+            //     if (exitCode != 0) {
+            //         return new CommandResult(exitCode, null, null);
+            //     }
+            // }
+            process = Runtime.getRuntime().exec(isRoot ? "su" : "sh");
             os = new DataOutputStream(process.getOutputStream());
             for (String command : commands) {
                 if (command == null) {
@@ -123,10 +153,11 @@ public class ShellUtils {
 
                 // donnot use os.writeBytes(commmand), avoid chinese charset error
                 os.write(command.getBytes());
-                os.writeBytes(COMMAND_LINE_END);
+                // os.writeBytes(command);
+                os.writeBytes("\n");
                 os.flush();
             }
-            os.writeBytes(COMMAND_EXIT);
+            os.writeBytes("exit\n");
             os.flush();
 
             result = process.waitFor();
@@ -144,8 +175,8 @@ public class ShellUtils {
                     errorMsg.append(s);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            AndroidLogUtils.LogE("execCommand", "IOException | InterruptedException: ", e);
         } finally {
             try {
                 if (os != null) {
@@ -166,7 +197,7 @@ public class ShellUtils {
             }
         }
         return new CommandResult(result, successMsg == null ? null : successMsg.toString(), errorMsg == null ? null
-                : errorMsg.toString());
+            : errorMsg.toString());
     }
 
     /**
@@ -182,11 +213,17 @@ public class ShellUtils {
      */
     public static class CommandResult {
 
-        /** result of command **/
-        public int    result;
-        /** success message of command result **/
+        /**
+         * result of command
+         **/
+        public int result;
+        /**
+         * success message of command result
+         **/
         public String successMsg;
-        /** error message of command result **/
+        /**
+         * error message of command result
+         **/
         public String errorMsg;
 
         public CommandResult(int result) {

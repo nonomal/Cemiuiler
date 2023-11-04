@@ -2,98 +2,147 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/home_title_icon_title">
-
         <SwitchPreference
-                android:title="@string/home_title_big_icon_corner"
-                android:key="prefs_key_home_title_big_icon_corner"
-                android:defaultValue="false"/>
-
-        <SwitchPreference
-                android:key="prefs_key_home_other_perfect_icon"
-                android:title="@string/home_other_perfect_icon"
-                android:defaultValue="false" />
-
-        <SwitchPreference
-                android:key="prefs_key_home_title_download_animation"
-                android:title="@string/home_title_download_animation"
-                android:defaultValue="false" />
-
-        <SwitchPreference
-                android:key="prefs_key_home_other_icon_mono_chrome"
-                android:title="@string/home_other_icon_mono_chrome"
-                android:defaultValue="false" />
-
-        <SwitchPreference
-                android:key="prefs_key_home_other_icon_monet_color"
-                android:title="@string/home_other_icon_monet_color"
-                android:defaultValue="false"
-                android:dependency="prefs_key_home_other_icon_mono_chrome"/>
-
-        <SwitchPreference
-            android:key="prefs_key_home_other_use_edit_color"
-            android:title="@string/home_other_use_edit_color"
             android:defaultValue="false"
-            android:dependency="prefs_key_home_other_icon_mono_chrome"/>
+            android:key="prefs_key_home_title_big_icon_corner"
+            android:title="@string/home_title_big_icon_corner" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_home_other_perfect_icon"
+            android:title="@string/home_other_perfect_icon" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_home_title_disable_hide_file"
+            android:title="@string/home_title_disable_hide_file" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_home_title_disable_hide_theme"
+            android:title="@string/home_title_disable_hide_theme" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_home_title_download_animation"
+            android:title="@string/home_title_download_animation" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_home_other_icon_mono_chrome"
+            android:title="@string/home_other_icon_mono_chrome" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="prefs_key_home_other_icon_mono_chrome"
+            android:key="prefs_key_home_other_icon_monet_color"
+            android:title="@string/home_other_icon_monet_color" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="prefs_key_home_other_icon_mono_chrome"
+            android:key="prefs_key_home_other_use_edit_color"
+            android:title="@string/home_other_use_edit_color" />
 
         <moralnorm.preference.ColorPickerPreference
-            android:persistent="false"
-            android:title="@string/home_other_your_color"
-            android:key="prefs_key_home_other_your_color_qwq"
-            android:dependency="prefs_key_home_other_use_edit_color"
             android:defaultValue="-1"
-            app:showAlphaSlider="false"/>
+            android:dependency="prefs_key_home_other_use_edit_color"
+            android:key="prefs_key_home_other_your_color_qwq"
+            android:title="@string/home_other_your_color"
+            app:showAlphaSlider="false" />
 
-        <SeekBarPreference
-                android:key="prefs_key_home_title_animation_speed"
-                android:title="@string/home_title_animation_speed"
-                android:defaultValue="100"
-                app:maxValue="500"
-                app:minValue="10"
-                android:format="%s / 100 f"
-                app:showSeekBarValue="true"/>
+        <SeekBarPreferenceEx
+            android:defaultValue="100"
+            android:key="prefs_key_home_title_animation_speed"
+            android:title="@string/home_title_animation_speed"
+            app:defaultValueText="@string/array_default"
+            app:format="%s / 100 f"
+            app:maxValue="500"
+            app:minValue="10"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreferenceEx
+            android:defaultValue="45"
+            android:key="pref_key_home_title_icon_scale"
+            android:title="@string/home_title_icon_scale"
+            app:defaultValueText="@string/array_default"
+            app:displayDividerValue="100"
+            app:format="X %s"
+            app:isPreferenceVisible="false"
+            app:maxValue="200"
+            app:minValue="45"
+            app:stepValue="5" />
 
         <SwitchPreference
-                android:key="prefs_key_home_title_fix_animation"
-                android:title="@string/home_title_fix_animation"
-                android:defaultValue="false" />
+            android:defaultValue="false"
+            android:key="prefs_key_home_title_fix_animation"
+            android:title="@string/home_title_fix_animation" />
+
+        <Preference
+            android:key="prefs_key_home_title_custom_anim_param"
+            android:title="@string/home_title_custom_anim_param"
+            android:fragment="com.sevtinge.cemiuiler.ui.fragment.home.HomeTitleAnimSettings" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/home_title_bigicon_title">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_home_large_icon_enable"
+            android:title="@string/home_large_icon_corner_radius" />
 
-        <SeekBarPreference
-                android:title="@string/home_large_icon_corner_radius"
-                android:key="prefs_key_home_large_icon_corner_radius"
-                android:defaultValue="15"
-                app:maxValue="90"
-                android:format="%d dp"
-                app:showSeekBarValue="true" />
+        <SeekBarPreferenceEx
+            android:defaultValue="32"
+            android:dependency="prefs_key_home_large_icon_enable"
+            android:key="prefs_key_home_large_icon_corner_radius"
+            android:layout="@layout/preference_seekbar_no_padding"
+            app:defaultValueText="@string/array_default"
+            app:format="%d dp"
+            app:maxValue="90"
+            app:minValue="0"
+            app:stepValue="1" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/home_title_title_title">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="prefs_key_home_title_title_new_install"
+            android:summary="@string/home_title_title_new_install_more"
+            android:title="@string/home_title_title_new_install" />
 
         <SwitchPreference
-            android:title="@string/home_title_title_marquee"
+            android:defaultValue="false"
+            android:disableDependentsState="true"
+            android:key="prefs_key_home_drawer_font_hidden"
+            android:summary="@string/home_title_drawer_font_hidden_more"
+            android:title="@string/home_title_drawer_font_hidden" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="prefs_key_home_drawer_font_hidden"
             android:key="prefs_key_home_title_title_marquee"
-            android:defaultValue="false"/>
+            android:summary="@string/home_title_title_marquee_desc"
+            android:title="@string/home_title_title_marquee" />
 
         <moralnorm.preference.ColorPickerPreference
-                android:persistent="false"
-                android:title="@string/home_title_title_color"
-                android:key="prefs_key_home_title_title_color"
-                android:defaultValue="-1"
-                app:showAlphaSlider="false"/>
+            android:defaultValue="-1"
+            android:dependency="prefs_key_home_drawer_font_hidden"
+            android:key="prefs_key_home_title_title_color"
+            android:title="@string/home_title_title_color"
+            app:showAlphaSlider="false" />
 
-        <SeekBarPreference
+        <SeekBarPreferenceEx
+            android:defaultValue="12"
+            android:dependency="prefs_key_home_drawer_font_hidden"
             android:key="prefs_key_home_title_font_size"
             android:title="@string/home_title_font_size"
-            android:defaultValue="12"
+            app:defaultValueText="@string/array_default"
+            app:format="%d sp"
             app:maxValue="20"
-            android:format="%d sp"
-            app:showSeekBarValue="true" />
+            app:minValue="0"
+            app:stepValue="1" />
 
     </PreferenceCategory>
-<Preference android:enabled="false" />
-
+    <Preference android:enabled="false" />
 </PreferenceScreen>

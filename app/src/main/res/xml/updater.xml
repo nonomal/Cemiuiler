@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreference
-            android:title="@string/updater_fuck_vab"
-            android:summary="@string/updater_fuck_vab_desc"
-            android:key="prefs_key_updater_fuck_vab"
-            android:defaultValue="false"/>
+        android:title="@string/updater_fuck_vab"
+        android:summary="@string/updater_fuck_vab_desc"
+        android:key="prefs_key_updater_fuck_vab"
+        android:defaultValue="false" />
+
+    <DropDownPreference
+        android:key="prefs_key_updater_version_mode"
+        android:title="@string/updater_version_mode"
+        android:defaultValue="1"
+        app:entries="@array/updater_version_mode"
+        app:entryValues="@array/updater_version_mode_value" />
 
     <EditTextPreference
-            android:title="@string/updater_miui_version"
-            android:summary="@string/updater_miui_version_desc"
-            android:key="prefs_key_various_updater_miui_version"/>
+        android:defaultValue="V816"
+        android:title="@string/updater_big_version"
+        android:summary="@string/updater_big_version_desc"
+        android:key="prefs_key_various_updater_big_version" />
 
     <EditTextPreference
-            android:title="@string/updater_device"
-            android:summary="@string/updater_device_desc"
-            android:key="prefs_key_updater_device"
-            app:isPreferenceVisible="true"/>
+        android:title="@string/updater_miui_version"
+        android:summary="@string/updater_miui_version_desc"
+        android:key="prefs_key_various_updater_miui_version" />
 
-<Preference android:enabled="false" />
-
+    <EditTextPreference
+        android:title="@string/updater_device"
+        android:summary="@string/updater_device_desc"
+        android:key="prefs_key_updater_device"
+        app:isPreferenceVisible="true" />
 </PreferenceScreen>

@@ -1,5 +1,6 @@
 package com.sevtinge.cemiuiler.data.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +25,14 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.ViewHold
     private static List<AppData> appInfoList;
     private Set<String> selectedApps;
     private onItemClickListener onItemClickListener;
-    private Context mContext;
-    private String mKey;
-    private int mType;
+    private final Context mContext;
+    private final String mKey;
+    private final int mType;
 
 
-    public void setData (List<AppData> appInfoList) {
-        this.appInfoList = appInfoList;
+    @SuppressLint("NotifyDataSetChanged")
+    public void setData(List<AppData> appInfoList) {
+        AppDataAdapter.appInfoList = appInfoList;
         notifyDataSetChanged();
     }
 
@@ -42,9 +44,11 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.ViewHold
 
     /**
      * 在Adapter中设置一个过滤方法，目的是为了将过滤后的数据传入Adapter中并刷新数据
+     *
      * @param locationListModels
      */
-    public void setFilter(List<AppData> locationListModels ) {
+    @SuppressLint("NotifyDataSetChanged")
+    public void setFilter(List<AppData> locationListModels) {
         appInfoList = new ArrayList<>();
         appInfoList.addAll(locationListModels);
         notifyDataSetChanged();
@@ -60,9 +64,9 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         AppData appInfo = appInfoList.get(position);
-        selectedApps = PrefsUtils.mSharedPreferences.getStringSet(mKey, new LinkedHashSet<String>());
+        selectedApps = PrefsUtils.mSharedPreferences.getStringSet(mKey, new LinkedHashSet<>());
 
-        holder.mAppListIcon.setImageDrawable(appInfo.icon);
+        holder.mAppListIcon.setImageBitmap(appInfo.icon);
         holder.mAppName.setText(appInfo.label);
         holder.mAppPackageName.setText(appInfo.packageName);
         holder.mSelecte.setChecked(shouldSelect(appInfo.packageName));
@@ -87,10 +91,10 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mAppListIcon;
-        private TextView mAppName;
-        private TextView mAppPackageName;
-        private CheckBox mSelecte;
+        private final ImageView mAppListIcon;
+        private final TextView mAppName;
+        private final TextView mAppPackageName;
+        private final CheckBox mSelecte;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -101,8 +105,8 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.ViewHold
         }
     }
 
-    public interface onItemClickListener{
-        void onItemClick(View view, int position, AppData appData , boolean isCheck);
+    public interface onItemClickListener {
+        void onItemClick(View view, int position, AppData appData, boolean isCheck);
     }
 
 }

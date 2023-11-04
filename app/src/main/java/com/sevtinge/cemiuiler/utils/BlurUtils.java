@@ -4,13 +4,17 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.RequiresApi;
 
 import com.sevtinge.cemiuiler.XposedInit;
 
 import de.robv.android.xposed.XposedHelpers;
 
+@RequiresApi(Build.VERSION_CODES.S)
 public class BlurUtils {
 
     private final Context mContext;
@@ -53,10 +57,10 @@ public class BlurUtils {
             String mCornerRadiusKey = key + "_corner_radius";
 
             isBlurEnable = XposedInit.mPrefsMap.getBoolean(mBlurEnableKey);
-            mBlurRadius = XposedInit.mPrefsMap.getInt(mBlurRadiusKey,60);
+            mBlurRadius = XposedInit.mPrefsMap.getInt(mBlurRadiusKey, 60);
 
-            mColor = XposedInit.mPrefsMap.getInt(mColorKey,2113929215);
-            mAlpha = XposedInit.mPrefsMap.getInt(mAlphaKey,60);
+            mColor = XposedInit.mPrefsMap.getInt(mColorKey, 2113929215);
+            mAlpha = XposedInit.mPrefsMap.getInt(mAlphaKey, 60);
             mCornerRadius = DisplayUtils.dip2px(context, XposedInit.mPrefsMap.getInt(mCornerRadiusKey, 18));
 
         } else {
@@ -74,7 +78,7 @@ public class BlurUtils {
         view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(View v) {
-                mViewRootImpl = XposedHelpers.callMethod(v,"getViewRootImpl",new Object[0]);
+                mViewRootImpl = XposedHelpers.callMethod(v, "getViewRootImpl");
                 mBlurDrawable = createBackgroundDrawable(mViewRootImpl, isBlurEnable, ColorUtilsStatic.colorToHexARGB(mColor), mCornerRadius, mBlurRadius);
                 v.setBackground(mBlurDrawable);
             }
@@ -86,23 +90,10 @@ public class BlurUtils {
         });
     }
 
-    private Drawable createBackgroundDrawable(Object viewRootImpl, boolean isBlurEnable, int color, int alpha, int cornerRadius, int blurRadius) {
+    private Drawable createBackgroundDrawable(Object viewRootImpl, boolean isBlurEnable, int color, int cornerRadius, int blurRadius) {
         Drawable mBackgroundDrawable;
         if (isBlurEnable) {
-            mBackgroundDrawable = (Drawable) XposedHelpers.callMethod(viewRootImpl, "createBackgroundBlurDrawable",new Object[0]);
-            setColor(mBackgroundDrawable, color, alpha);
-            setCornerRadius(mBackgroundDrawable, cornerRadius);
-            setBlurRadius(mBackgroundDrawable, blurRadius);
-        } else {
-            mBackgroundDrawable = createGradientDrawable(color, alpha, cornerRadius);
-        }
-        return mBackgroundDrawable;
-    }
-
-    private Drawable createBackgroundDrawable(Object viewRootImpl, boolean isBlurEnable, String color, int cornerRadius, int blurRadius) {
-        Drawable mBackgroundDrawable;
-        if (isBlurEnable) {
-            mBackgroundDrawable = (Drawable) XposedHelpers.callMethod(viewRootImpl, "createBackgroundBlurDrawable",new Object[0]);
+            mBackgroundDrawable = (Drawable) XposedHelpers.callMethod(viewRootImpl, "createBackgroundBlurDrawable", new Object[0]);
             setColor(mBackgroundDrawable, color);
             setCornerRadius(mBackgroundDrawable, cornerRadius);
             setBlurRadius(mBackgroundDrawable, blurRadius);
@@ -112,15 +103,29 @@ public class BlurUtils {
         return mBackgroundDrawable;
     }
 
-    private GradientDrawable createGradientDrawable(int color, int alpha, int cornerRadius) {
+    private Drawable createBackgroundDrawable(Object viewRootImpl, boolean isBlurEnable, String color, int cornerRadius, int blurRadius) {
+        Drawable mBackgroundDrawable;
+        if (isBlurEnable) {
+            mBackgroundDrawable = (Drawable) XposedHelpers.callMethod(viewRootImpl, "createBackgroundBlurDrawable", new Object[0]);
+            setColor(mBackgroundDrawable, color);
+            setCornerRadius(mBackgroundDrawable, cornerRadius);
+            setBlurRadius(mBackgroundDrawable, blurRadius);
+        } else {
+            mBackgroundDrawable = createGradientDrawable(color, cornerRadius);
+        }
+        return mBackgroundDrawable;
+    }
 
+    private GradientDrawable createGradientDrawable(int color, int cornerRadius) {
+
+        int mColorAlpha = (color & 0xff000000) >> 24;
         int mColorRed = (color & 0x00ff0000) >> 16;
         int mColorGreen = (color & 0x0000ff00) >> 8;
         int mColorBlue = (color & 0x000000ff);
 
         GradientDrawable mBackgroundDrawable = new GradientDrawable();
         mBackgroundDrawable.setShape(GradientDrawable.RECTANGLE);
-        mBackgroundDrawable.setColor(Color.argb(alpha, mColorRed, mColorGreen, mColorBlue));
+        mBackgroundDrawable.setColor(Color.argb(mColorAlpha, mColorRed, mColorGreen, mColorBlue));
         mBackgroundDrawable.setCornerRadius(cornerRadius);
         return mBackgroundDrawable;
     }
@@ -133,27 +138,24 @@ public class BlurUtils {
         return mBackgroundDrawable;
     }
 
-    public void setColor(Drawable drawable, int color, int alpha) {
+    public void setColor(Drawable drawable, int color) {
+        int mColorAlpha = (color & 0xff000000) >> 24;
         int mColorRed = (color & 0x00ff0000) >> 16;
         int mColorGreen = (color & 0x0000ff00) >> 8;
         int mColorBlue = (color & 0x000000ff);
-        XposedHelpers.callMethod(drawable,"setColor", Color.argb(alpha, mColorRed, mColorGreen, mColorBlue));
-    }
-
-    public void setColor(Drawable drawable, int color) {
-        XposedHelpers.callMethod(drawable,"setColor", Color.parseColor(String.valueOf(color)));
+        XposedHelpers.callMethod(drawable, "setColor", Color.argb(mColorAlpha, mColorRed, mColorGreen, mColorBlue));
     }
 
     public void setColor(Drawable drawable, String color) {
-        XposedHelpers.callMethod(drawable,"setColor", Color.parseColor(color));
+        XposedHelpers.callMethod(drawable, "setColor", Color.parseColor(color));
     }
 
     public void setCornerRadius(Drawable drawable, int cornerRadius) {
-        XposedHelpers.callMethod(drawable,"setCornerRadius",new Object[]{cornerRadius});
+        XposedHelpers.callMethod(drawable, "setCornerRadius", new Object[]{cornerRadius});
     }
 
     public void setBlurRadius(Drawable drawable, int blurRadius) {
-        XposedHelpers.callMethod(drawable,"setBlurRadius",new Object[]{blurRadius});
+        XposedHelpers.callMethod(drawable, "setBlurRadius", new Object[]{blurRadius});
     }
 
 

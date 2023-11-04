@@ -21,10 +21,8 @@ public class LogcatHelper {
     private final int mPId;
 
     /**
-     *
      * 初始化目录
-     *
-     * */
+     */
     public void init(Context context) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // 优先保存到SD卡中
@@ -80,13 +78,13 @@ public class LogcatHelper {
                 e.printStackTrace();
             }
 
-            /**
-             *
-             * 日志等级：*:v , *:d , *:w , *:e , *:f , *:s
-             *
-             * 显示当前mPID程序的 E和W等级的日志.
-             *
-             * */
+            /*
+
+              日志等级：*:v , *:d , *:w , *:e , *:f , *:s
+              <p>
+              显示当前mPID程序的 E和W等级的日志.
+              <p>
+              */
 
             // cmds = "logcat *:e *:w | grep \"(" + mPID + ")\"";
             // cmds = "logcat  | grep \"(" + mPID + ")\"";//打印所有日志信息
@@ -116,7 +114,7 @@ public class LogcatHelper {
                     }
                     if (out != null && line.contains(mPID)) {
                         out.write((getDateEN() + "  " + line + "\n")
-                                .getBytes());
+                            .getBytes());
                     }
                 }
 

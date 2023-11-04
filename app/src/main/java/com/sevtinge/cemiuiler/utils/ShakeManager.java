@@ -5,7 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-import com.sevtinge.cemiuiler.module.GlobalActions;
+import com.sevtinge.cemiuiler.module.app.GlobalActions;
 
 public class ShakeManager implements SensorEventListener {
 
@@ -40,7 +40,7 @@ public class ShakeManager implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        //Don't care...
+        // Don't care...
     }
 
     @Override
@@ -78,8 +78,8 @@ public class ShakeManager implements SensorEventListener {
         float shakeThresholdY = 4f;
         float shakeThresholdZ = 8f;
         return (deltaX > shakeThresholdX && deltaY > shakeThresholdY)
-                || (deltaX > shakeThresholdX && deltaZ > shakeThresholdZ)
-                || (deltaY > shakeThresholdY && deltaZ > shakeThresholdZ);
+            || (deltaX > shakeThresholdX && deltaZ > shakeThresholdZ)
+            || (deltaY > shakeThresholdY && deltaZ > shakeThresholdZ);
     }
 
     private void executeShakeActionDelayed() {
